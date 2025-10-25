@@ -5,6 +5,8 @@ A comprehensive Docker container setup for Laravel applications using the Server
 ## 🚀 Overview
 This repository provides a production-ready Docker container configuration for Laravel applications, built on top of the `serversideup/php:8.4-fpm-nginx` base image. The container includes:
 
+> 📚 **For more detailed documentation about ServerSideUp containers and configuration options, visit the [ServerSideUp Documentation](https://serversideup.net/open-source/docker-php/docs).**
+
 - **Laravel Compatible base Image** with PHP 8.4 and Nginx
 - **Laravel Horizon** for queue management
 - **Laravel Scheduler** for cron job execution
@@ -243,7 +245,7 @@ The container runs multiple services simultaneously:
 - **PHP-FPM**: PHP processing on port 9000
 - **Horizon**: Queue management
 - **Scheduler**: Cron job execution
-- **Nightwatch**: E2E testing
+- **Nightwatch**: Monitoring
 
 Monitor these services using:
 
