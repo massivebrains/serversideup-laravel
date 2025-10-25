@@ -1,0 +1,4 @@
+#!/command/execlineb -P
+with-contenv
+cd /var/www/html
+php artisan schedule:work
