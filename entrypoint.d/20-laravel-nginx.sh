@@ -1,45 +1,25 @@
 #!/bin/sh
 set -e
 
-echo "Adding laravel-port-80 Nginx config for ports 80 and 443..."
+echo "Adding laravel-port-80 Nginx config for port 80..."
 
-# Create a new Nginx config file since serverside-up runs un-privileged, If you check dockerfile, this is why it runs all .sh as root and then return to www-data
+# Adding a proxy to port 8080 so as to expose port 80 (using cap_net_bind_service=+ep)
 cat > /etc/nginx/conf.d/laravel-port-80.conf <<'EOF'
 server {
     listen 80;
-    listen 443;
     server_name _;
-    charset utf-8;
-    client_max_body_size 2048M;
-
-
-    root /var/www/html/public;
-    index index.php index.html;
 
     location / {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
-
-    location ~ \.php$ {
-        include fastcgi_params;
-        fastcgi_pass 127.0.0.1:9000;
-        fastcgi_index index.php;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        proxy_pass http://127.0.0.1:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 
     location /health {
-      default_type application/json;
-      return 200 '{"code":"1", "message": "Hey im Healthy thanks to you!"}';
-    }
-
-    location ~ \.php$ {
-        return 404;
-    }
-
-    location ~ /\.ht {
-       deny  all;
+        default_type text/plain;
+        return 200 'OK';
     }
 }
 EOF
-
-echo "Added /etc/nginx/conf.d/laravel-port-80.conf.conf"
